@@ -4,8 +4,7 @@ const PHOTO_URL = "https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg";
 let cachedPhoto = null;
 let photoLoading = false;
 
-// Download the menu image once and keep it in memory.
-// Baileys no longer needs to fetch the remote URL for every .menu command.
+// Download the menu image once and keep it in memory efficiently.
 function warmPhotoCache() {
   if (cachedPhoto || photoLoading) return;
   photoLoading = true;
@@ -32,15 +31,20 @@ function warmPhotoCache() {
     });
   });
 
-  req.on("timeout", () => req.destroy(new Error("Menu photo request timed out")));
-  req.on("error", () => { photoLoading = false; });
+  req.on("timeout", () => {
+    req.destroy(new Error("Menu photo request timed out"));
+  });
+  
+  req.on("error", () => { 
+    photoLoading = false; 
+  });
 }
 
+// Background mein cache warm karne ke liye call kiya gaya hai
 warmPhotoCache();
 
 function buildMenuCaption({ prefix = "", platform = process.platform }) {
-  return `
-╭─❏ 👑 *DEVA XMD BOT* ❏─⊷
+  return `╭─❏ 👑 *DEVA XMD BOT* ❏─⊷
 ┃ 🚀 *ULTRA SPEED BOT v4.1*
 ┣━━━━━━━━━━━━━━━━━─⊷
 ┃ 👤 *Owner* ➜ *DEVA-NAYAK*
@@ -56,18 +60,23 @@ function buildMenuCaption({ prefix = "", platform = process.platform }) {
 ╰━💻 *Cᴏᴅᴇᴅ ʙʏ : ᴅᴇᴠᴀ*❤️──⊷`;
 }
 
-async function handleMenuCommand({ sock, jid, quoted, botSettings }) {
+async function handleMenuCommand({ sock, jid, quoted, botSettings = {} }) {
   const caption = buildMenuCaption({
-    prefix: botSettings.prefix || "",
+    prefix: botSettings.prefix || ".",
     platform: process.platform
   });
 
-  // If the cache is ready, send the image as a buffer (fast).
-  // If not, send the menu text immediately rather than waiting on the URL.
-  if (cachedPhoto) {
-    await sock.sendMessage(jid, { image: cachedPhoto, caption }, { quoted });
-  } else {
-    warmPhotoCache();
+  try {
+    if (cachedPhoto) {
+      await sock.sendMessage(jid, { image: cachedPhoto, caption }, { quoted });
+    } else {
+      // Agar cache ready nahi hai toh background mein load karo aur turant text bhej do taaki user ko wait na karna pade
+      warmPhotoCache();
+      await sock.sendMessage(jid, { text: caption }, { quoted });
+    }
+  } catch (err) {
+    console.error("Error in menu command:", err);
+    // Fallback agar image send karne mein koi error aaye toh sirf text caption bhej do
     await sock.sendMessage(jid, { text: caption }, { quoted });
   }
 }

@@ -17,6 +17,7 @@ async function handleFullppCommand({ sock, jid, quoted, msg, prefix = "." }) {
   try {
     const quotedImage = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage;
     const image = unwrap(msg?.message)?.imageMessage || unwrap(quotedImage)?.imageMessage;
+    
     if (!image) {
       await sock.sendMessage(jid, {
         text: `❌ Reply to an image with *${prefix}fullpp* to set it as the bot profile picture.`
@@ -24,27 +25,33 @@ async function handleFullppCommand({ sock, jid, quoted, msg, prefix = "." }) {
       return;
     }
 
+    await sock.sendMessage(jid, { text: "⏳ Processing image for profile picture..." }, { quoted });
+
+    // Download media chunks efficiently
     const stream = await downloadContentFromMessage(image, "image");
     const chunks = [];
-    for await (const chunk of stream) chunks.push(chunk);
-    const resized = await sharp(Buffer.concat(chunks))
-      .resize(720, 720, { fit: "inside", withoutEnlargement: true })
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+    const buffer = Buffer.concat(chunks);
+
+    // Resize and crop/fit image using sharp for WhatsApp profile picture (Square ratio recommended)
+    const resized = await sharp(buffer)
+      .resize(640, 640, { fit: "cover" })
       .jpeg({ quality: 90 })
       .toBuffer();
 
-    await sock.query({
-      tag: "iq",
-      attrs: { to: "s.whatsapp.net", type: "set", xmlns: "w:profile:picture" },
-      content: [{ tag: "picture", attrs: { type: "image" }, content: resized }]
-    });
-    await sock.sendMessage(jid, { text: "✅ Profile picture updated successfully." }, { quoted });
+    // Update Bot Profile Picture using Baileys built-in method / query
+    await sock.updateProfilePicture(sock.user.id, resized);
+
+    await sock.sendMessage(jid, { text: "✅ Bot profile picture updated successfully!" }, { quoted });
   } catch (e) {
-    console.error("FULLPP ERROR:", e?.message || e);
-    await sock.sendMessage(jid, {
-      text: `❌ Failed to update the profile picture.\n\n${e?.message || "Unknown error"}`
-    }, { quoted });
+    console.error("Error in fullpp command:", e);
+    await sock.sendMessage(jid, { text: `❌ Failed to update profile picture. Error: ${e.message}` }, { quoted });
   } finally {
-    try { await sock.sendPresenceUpdate("paused", jid); } catch {}
+    try { 
+      await sock.sendPresenceUpdate("paused", jid); 
+    } catch {}
   }
 }
 
