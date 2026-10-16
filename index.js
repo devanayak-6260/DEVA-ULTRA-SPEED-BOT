@@ -10,15 +10,8 @@ const path = require("path");
 const { handleMenuCommand } = require("./commands/menu.js");
 const { handleFullppCommand } = require("./commands/fullpp.js");
 
-// Keep the hosting console clean: show only the successful connection message.
-const originalConsoleLog = console.log.bind(console);
-console.log = (...args) => {
-  if (String(args[0] || "").startsWith("DEVA XMD-BOT connected:")) {
-    originalConsoleLog(...args);
-  }
-};
-console.error = () => {};
-console.warn = () => {};
+// Keep useful startup, pairing-code, and error messages visible in the hosting console.
+// Baileys' own logger is configured as silent below, so normal library noise stays low.
 
 const PHONE_NUMBER = String(require("./phone") || "").replace(/\D/g, "");
 const OWNER_NUMBER = PHONE_NUMBER;
