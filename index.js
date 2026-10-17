@@ -219,7 +219,7 @@ async function start(sessionPhone = PHONE_NUMBER, sessionDir = AUTH_DIR) {
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
       await sock.sendMessage(jid, {
-        text: `I'm here and ready 🚀\nUptime : ${hours} hours${minutes ? `${minutes} minutes ` : ""}${seconds} seconds`
+        text: `I'm here and ready 🚀\nUptime : ${hours} hours ${minutes ? `${minutes} minutes ` : ""}${seconds} seconds`
       }, { quoted });
     },
     async fullpp({ sock, jid, quoted, prefix }) {
