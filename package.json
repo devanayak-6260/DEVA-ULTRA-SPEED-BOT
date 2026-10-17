@@ -5,7 +5,8 @@
   "description": "Minimal WhatsApp bot with pairing code",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "fast": "pm2 start index.js --name deva-bot --no-daemon"
   },
   "engines": {
     "node": ">=20"
@@ -13,6 +14,7 @@
   "dependencies": {
     "@whiskeysockets/baileys": "latest",
     "pino": "latest",
+    "pm2": "latest",
     "sharp": "latest"
   }
 }

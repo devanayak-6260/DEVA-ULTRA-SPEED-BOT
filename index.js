@@ -1,304 +1,353 @@
-Const {
-  Default: makeWASocket,
-  UseMultiFileAuthState,
+const {
+  default: makeWASocket,
+  useMultiFileAuthState,
   DisconnectReason,
-  FetchLatestBaileysVersion
+  fetchLatestBaileysVersion,
+  makeInMemoryStore
 } = require("@whiskeysockets/baileys");
-Const pino = require("pino");
-Const fs = require("fs");
-Const path = require("path");
-Const { handleMenuCommand } = require("./commands/menu.js");
-Const { handleFullppCommand } = require("./commands/fullpp.js");
+const pino = require("pino");
+const fs = require("fs");
+const path = require("path");
+const { handleMenuCommand } = require("./commands/menu.js");
+const { handleFullppCommand } = require("./commands/fullpp.js");
 
-Const PHONE_NUMBER = String(require("./phone") || "").replace(/\D/g, "");
-Const OWNER_NUMBER = PHONE_NUMBER;
-Const AUTH_DIR = path.join(__dirname, "auth_info");
-Const SESSION_ROOT = path.join(__dirname, "auth_sessions");
-Const SESSION_REGISTRY = path.join(SESSION_ROOT, "numbers.json");
-Const SETTINGS_PATH = path.join(__dirname, "settings.json");
+const PHONE_NUMBER = String(require("./phone") || "").replace(/\D/g, "");
+const OWNER_NUMBER = PHONE_NUMBER;
+const AUTH_DIR = path.join(__dirname, "auth_info");
+const SESSION_ROOT = path.join(__dirname, "auth_sessions");
+const SESSION_REGISTRY = path.join(SESSION_ROOT, "numbers.json");
+const SETTINGS_PATH = path.join(__dirname, "settings.json");
 
-Const reconnectingSessions = new Set();
-If (!global.botStartTime) global.botStartTime = Date.now();
+const reconnectingSessions = new Set();
+if (!global.botStartTime) global.botStartTime = Date.now();
 
-Function loadSettings() {
-  Try {
-    Const saved = JSON.parse(fs.readFileSync(SETTINGS_PATH, "utf8"));
-    Return { 
-      Status: saved.status !== false, 
-      Online: saved.online === true, 
-      Prefix: typeof saved.prefix === "string" ? saved.prefix : "." 
+// Safe In-Memory Store setup with fallback
+let store;
+try {
+  if (typeof makeInMemoryStore === "function") {
+    store = makeInMemoryStore({ logger: pino({ level: "silent" }) });
+  } else {
+    throw new Error();
+  }
+} catch {
+  store = { bind: () => {} };
+}
+
+// Cached Settings Object
+let cachedSettings = null;
+function loadSettings() {
+  if (cachedSettings) return cachedSettings;
+  try {
+    const saved = JSON.parse(fs.readFileSync(SETTINGS_PATH, "utf8"));
+    cachedSettings = { 
+      status: saved.status !== false, 
+      online: saved.online === true, 
+      prefix: typeof saved.prefix === "string" ? saved.prefix : "." 
     };
   } catch {
-    Return { status: true, online: false, prefix: "." };
+    cachedSettings = { status: true, online: false, prefix: "." };
   }
+  return cachedSettings;
 }
 
-Const botSettings = loadSettings();
+const botSettings = loadSettings();
 
-Function saveSettings() {
-  Try { 
-    Fs.writeFileSync(SETTINGS_PATH, JSON.stringify({ 
-      Status: botSettings.status, 
-      Online: botSettings.online, 
-      Prefix: botSettings.prefix 
-    }, null, 2)); 
+async function saveSettings() {
+  try { 
+    await fs.promises.writeFile(SETTINGS_PATH, JSON.stringify(botSettings, null, 2)); 
   } catch (e) { 
-    Console.error("SETTINGS SAVE ERROR:", e?.message || e); 
+    console.error("SETTINGS SAVE ERROR:", e?.message || e); 
   }
 }
 
-Function getText(msg) {
-  Let m = msg?.message || {};
-  For (let i = 0; i < 5; i++) {
-    Const wrapped = m.ephemeralMessage?.message ||
-      M.viewOnceMessage?.message ||
-      M.viewOnceMessageV2?.message ||
-      M.documentWithCaptionMessage?.message;
-    If (!wrapped) break;
-    M = wrapped;
+function getText(msg) {
+  let m = msg?.message || {};
+  for (let i = 0; i < 5; i++) {
+    const wrapped = m.ephemeralMessage?.message ||
+      m.viewOnceMessage?.message ||
+      m.viewOnceMessageV2?.message ||
+      m.documentWithCaptionMessage?.message;
+    if (!wrapped) break;
+    m = wrapped;
   }
-  Return String(
-    M.conversation ||
-    M.extendedTextMessage?.text ||
-    M.imageMessage?.caption ||
-    M.videoMessage?.caption ||
-    M.documentMessage?.caption ||
-    M.buttonsResponseMessage?.selectedButtonId ||
-    M.templateButtonReplyMessage?.selectedId ||
-    M.listResponseMessage?.singleSelectReply?.selectedRowId ||
+  return String(
+    m.conversation ||
+    m.extendedTextMessage?.text ||
+    m.imageMessage?.caption ||
+    m.videoMessage?.caption ||
+    m.documentMessage?.caption ||
+    m.buttonsResponseMessage?.selectedButtonId ||
+    m.templateButtonReplyMessage?.selectedId ||
+    m.listResponseMessage?.singleSelectReply?.selectedRowId ||
     ""
   ).trim();
 }
 
-Function getCommandSenderNumber(msg, jid, sessionNumber) {
-  Const senderJid = msg?.key?.fromMe
+function getCommandSenderNumber(msg, jid, sessionNumber) {
+  const senderJid = msg?.key?.fromMe
     ? `${String(sessionNumber || "").replace(/\D/g, "")}@s.whatsapp.net`
     : (msg?.key?.participant || jid || "");
-  Return String(senderJid).split("@")[0].replace(/\D/g, "");
+  return String(senderJid).split("@")[0].replace(/\D/g, "");
 }
 
-Function isOwnerCommand(msg, jid, sessionNumber) {
-  Const senderNumber = getCommandSenderNumber(msg, jid, sessionNumber);
-  Return Boolean(OWNER_NUMBER && senderNumber && senderNumber === OWNER_NUMBER);
+function isOwnerCommand(msg, jid, sessionNumber) {
+  const senderNumber = getCommandSenderNumber(msg, jid, sessionNumber);
+  return Boolean(OWNER_NUMBER && senderNumber && senderNumber === OWNER_NUMBER);
 }
 
-Function readSessionNumbers() {
-  Try {
-    Const list = JSON.parse(fs.readFileSync(SESSION_REGISTRY, "utf8"));
-    Return Array.isArray(list) ? [...new Set(list.map(v => String(v).replace(/\D/g, "")).filter(v => /^\d{10,15}$/.test(v) && v !== OWNER_NUMBER))] : [];
+function readSessionNumbers() {
+  try {
+    const list = JSON.parse(fs.readFileSync(SESSION_REGISTRY, "utf8"));
+    return Array.isArray(list) ? [...new Set(list.map(v => String(v).replace(/\D/g, "")).filter(v => /^\d{10,15}$/.test(v) && v !== OWNER_NUMBER))] : [];
   } catch { return []; }
 }
 
-Async function start(sessionPhone = PHONE_NUMBER, sessionDir = AUTH_DIR) {
-  Const number = String(sessionPhone || "").replace(/\D/g, "");
-  If (!/^\d{10,15}$/.test(number)) throw new Error("Invalid WhatsApp phone number in phone file.");
+async function start(sessionPhone = PHONE_NUMBER, sessionDir = AUTH_DIR) {
+  const number = String(sessionPhone || "").replace(/\D/g, "");
+  if (!/^\d{10,15}$/.test(number)) throw new Error("Invalid WhatsApp phone number in phone file.");
   
-  Const sessionKey = path.resolve(sessionDir);
-  If (reconnectingSessions.has(sessionKey)) return;
-  ReconnectingSessions.add(sessionKey);
+  const sessionKey = path.resolve(sessionDir);
+  if (reconnectingSessions.has(sessionKey)) return;
+  reconnectingSessions.add(sessionKey);
 
-  Const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
-  Let version;
-  Try { ({ version } = await fetchLatestBaileysVersion()); } catch {}
+  const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
+  let version;
+  try { ({ version } = await fetchLatestBaileysVersion()); } catch {}
 
-  Const sock = makeWASocket({
-    Auth: state,
+  const sock = makeWASocket({
+    auth: state,
     ...(version ? { version } : {}),
-    Logger: pino({ level: "silent" }),
-    PrintQRInTerminal: false,
-    MarkOnlineOnConnect: false,
-    EmitOwnEvents: true,
-    SyncFullHistory: false,
-    GenerateHighQualityLinkPreview: false
+    logger: pino({ level: "silent" }),
+    printQRInTerminal: false,
+    markOnlineOnConnect: false,
+    emitOwnEvents: true,
+    syncFullHistory: false,
+    generateHighQualityLinkPreview: false
   });
 
-  Sock.ev.on("creds.update", saveCreds);
+  sock.ev.on("creds.update", saveCreds);
+  if (typeof store.bind === "function") {
+    store.bind(sock.ev);
+  }
 
-  Let onlinePresenceTimer = null;
-  Async function applyOnlinePresence() {
-    Try { 
-      Await sock.sendPresenceUpdate(botSettings.online ? "available" : "unavailable"); 
+  let onlinePresenceTimer = null;
+  async function applyOnlinePresence() {
+    try { 
+      await sock.sendPresenceUpdate(botSettings.online ? "available" : "unavailable"); 
     } catch (e) {}
   }
 
-  Function syncOnlinePresence() {
-    If (onlinePresenceTimer) clearInterval(onlinePresenceTimer);
-    OnlinePresenceTimer = null;
-    ApplyOnlinePresence().catch(() => {});
-    If (botSettings.online) {
-      OnlinePresenceTimer = setInterval(() => {
-        ApplyOnlinePresence().catch(() => {});
+  function syncOnlinePresence() {
+    if (onlinePresenceTimer) clearInterval(onlinePresenceTimer);
+    onlinePresenceTimer = null;
+    applyOnlinePresence().catch(() => {});
+    if (botSettings.online) {
+      onlinePresenceTimer = setInterval(() => {
+        applyOnlinePresence().catch(() => {});
       }, 25000);
-      If (typeof onlinePresenceTimer.unref === "function") onlinePresenceTimer.unref();
+      if (typeof onlinePresenceTimer.unref === "function") onlinePresenceTimer.unref();
     }
   }
 
-  If (!state.creds.registered) {
-    SetTimeout(async () => {
-      Try {
-        Const code = await sock.requestPairingCode(number);
-        Console.log(`\nDEVA XMD-BOT pairing code for +${number}: ${code}`);
-        Console.log("WhatsApp > Linked devices > Link a device > Link with phone number");
+  if (!state.creds.registered) {
+    setTimeout(async () => {
+      try {
+        const code = await sock.requestPairingCode(number);
+        console.log(`
+========================================
+         👑  𝗗𝗘𝗩𝗔 𝗫𝗠𝗗 𝗕𝗢𝗧 👑
+========================================
+  WHATSAPP PAIRING CODE FOR +${number}:
+  
+            >>>  ${code}  <<<
+            
+  Go to: Linked devices > Link a device
+  > Link with phone number instead
+========================================`);
       } catch (e) { console.error("PAIRING ERROR:", e?.message || e); }
     }, 3000);
   }
 
-  Sock.ev.on("connection.update", ({ connection, lastDisconnect }) => {
-    If (connection === "open") {
-      ReconnectingSessions.delete(sessionKey);
-      SyncOnlinePresence();
-      Console.log(`
-██████████████████████████████████████
-
-         👑 DEVA XMD BOT 👑
-
-██████████████████████████████████████
-✓ WhatsApp Connected
-✓ Database Connected
-✓ Plugins Loaded
-✓ Commands Registered
-✓ Bot Started Successfully
-
-Status : ONLINE ✓ +${number}`);
+  sock.ev.on("connection.update", ({ connection, lastDisconnect }) => {
+    if (connection === "open") {
+      reconnectingSessions.delete(sessionKey);
+      syncOnlinePresence();
+      console.log(`
+============================================
+=                                          =
+=         👑  ⟪ 𝗗𝗘𝗩𝗔 𝗫𝗠𝗗 𝗕𝗢𝗧 ⟫ 👑          =
+=                                          =
+============================================
+=                                          =
+=   🪀 WhatsApp Connected       :: [ ✅ ]   =
+=   📡 Database Connected       :: [ ✔️ ]   =
+=   🔌 Plugins Loaded           :: [ ⚡ ]   =
+=   ⚙️  Commands Registered     :: [ 🎯 ]   =
+=   🚀 Bot Started Successfully :: [ 🔥 ]   =
+=                                          =
+=  🌐  Status : ONLINE ⚡  |  +${number}   =
+=                                          =
+============================================
+`);
     }
-    If (connection === "close") {
-      If (onlinePresenceTimer) clearInterval(onlinePresenceTimer);
-      OnlinePresenceTimer = null;
-      ReconnectingSessions.delete(sessionKey);
-      Const statusCode = lastDisconnect?.error?.output?.statusCode;
-      If (statusCode !== DisconnectReason.loggedOut) {
-        SetTimeout(() => start(number, sessionDir).catch(() => {}), 2000);
+
+    if (connection === "close") {
+      if (onlinePresenceTimer) clearInterval(onlinePresenceTimer);
+      onlinePresenceTimer = null;
+      reconnectingSessions.delete(sessionKey);
+      const statusCode = lastDisconnect?.error?.output?.statusCode;
+      if (statusCode !== DisconnectReason.loggedOut) {
+        setTimeout(() => start(number, sessionDir).catch(() => {}), 2000);
       } else {
-        Console.error(`WhatsApp session logged out: +${number}`);
+        console.error(`WhatsApp session logged out: +${number}`);
       }
     }
   });
 
-  Sock.ev.on("messages.upsert", async ({ messages }) => {
-    For (const msg of messages || []) {
-      Try {
-        If (!msg?.message) continue;
-
-        Const jid = msg.key?.remoteJid || "";
-
-        // Status Seen Handler
-        If (botSettings.status && (jid === "status@broadcast" || jid.endsWith("@broadcast"))) {
-          Sock.readMessages([msg.key]).catch(() => {});
-          Continue;
-        }
-
-        If (jid.endsWith("@g.us") || jid.endsWith("@broadcast") || jid.endsWith("@newsletter")) continue;
-
-        Const text = getText(msg);
-        If (!text) continue;
-
-        Const prefix = botSettings.prefix || "";
-        Const trimmed = text.trim();
-
-        // Prefix validation check
-        If (prefix) {
-          If (!trimmed.startsWith(prefix)) continue;
-        }
-
-        Const commandText = (prefix && trimmed.startsWith(prefix)
-          ? Trimmed.slice(prefix.length)
-          : Trimmed).trim().toLowerCase();
-
-        Const ownerOnlyCommands = new Set([
-          "fullpp",
-          "online on", "online off",
-          "status on", "status off",
-          "status seen on", "status seen off",
-          "prefix"
-        ]);
-
-        If (ownerOnlyCommands.has(commandText) && !isOwnerCommand(msg, jid, number)) {
-          Await sock.sendMessage(jid, {
-            Text: "⛔ Oɴʟʏ ᴛʜᴇ Bᴏᴛ Oᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛHɪꜱ Cᴏᴍᴍᴀɴᴅ"
-          }, { quoted: msg });
-          Continue;
-        }
-
-        // Handle dynamic prefix configuration (.prefix <symbol> or .prefix null)
-        If (commandText.startsWith("prefix")) {
-          Const args = trimmed.split(" ");
-          If (args.length > 1) {
-            Const newPrefixArg = args[1].trim();
-            If (newPrefixArg.toLowerCase() === "null") {
-              BotSettings.prefix = "";
-              SaveSettings();
-              Await sock.sendMessage(jid, { text: "✅ Prefix removed successfully! Now commands work without any prefix." }, { quoted: msg });
-            } else {
-              BotSettings.prefix = newPrefixArg;
-              SaveSettings();
-              Await sock.sendMessage(jid, { text: `✅ Prefix updated successfully to: ${botSettings.prefix}` }, { quoted: msg });
-            }
-          } else {
-            Await sock.sendMessage(jid, { text: `⚙️ Current Bot Prefix: ${botSettings.prefix ? botSettings.prefix : "None (Blank)"}` }, { quoted: msg });
-          }
-          Continue;
-        }
-
-        If (commandText === "menu") {
-          Await handleMenuCommand({ sock, jid, quoted: msg, botSettings });
-          Continue;
-        }
-        If (commandText === "ping") {
-          Const started = Date.now();
-          Await sock.sendMessage(jid, { text: `🏓 Pong!\n⏱️ *_DEVA XMD BOT Sᴘᴇᴇᴅ: ${Date.now() - started} Mꜱ_*` }, { quoted: msg });
-          Continue;
-        }
-        If (commandText === "alive") {
-          Const totalSeconds = Math.floor((Date.now() - global.botStartTime) / 1000);
-          Const hours = Math.floor(totalSeconds / 3600);
-          Const minutes = Math.floor((totalSeconds % 3600) / 60);
-          Const seconds = totalSeconds % 60;
-          Await sock.sendMessage(jid, {
-            Text: `I'm here and ready 🚀\nUptime : ${hours} hours ${minutes ? `${minutes} minutes ` : ""}${seconds} seconds`
-          }, { quoted: msg });
-          Continue;
-        }
-        If (commandText === "fullpp") {
-          Await handleFullppCommand({ sock, jid, quoted: msg, msg, prefix });
-          Continue;
-        }
-        If (commandText === "online on") {
-          BotSettings.online = true; saveSettings();
-          SyncOnlinePresence();
-          Await sock.sendMessage(jid, { text: "✅ Always Online: ON" }, { quoted: msg });
-          Continue;
-        }
-        If (commandText === "online off") {
-          BotSettings.online = false; saveSettings();
-          SyncOnlinePresence();
-          Await sock.sendMessage(jid, { text: "✅ Always Online: OFF" }, { quoted: msg });
-          Continue;
-        }
-        If (commandText === "status on" || commandText === "status seen on") {
-          BotSettings.status = true; saveSettings();
-          Await sock.sendMessage(jid, { text: "✅ Auto Status Seen: ON" }, { quoted: msg });
-          Continue;
-        }
-        If (commandText === "status off" || commandText === "status seen off") {
-          BotSettings.status = false; saveSettings();
-          Await sock.sendMessage(jid, { text: "✅ Auto Status Seen: OFF" }, { quoted: msg });
-          Continue;
-        }
-      } catch (e) {
-        // Silenced minor message errors
+  // Commands Handler
+  const commands = {
+    async menu({ sock, jid, quoted }) {
+      await handleMenuCommand({ sock, jid, quoted, botSettings });
+    },
+    async ping({ sock, jid, quoted }) {
+      const started = Date.now();
+      await sock.sendMessage(jid, { text: `🏓 Pong!\n⏱️ *_DEVA XMD BOT Sᴘᴇᴇᴅ: ${Date.now() - started} Mꜱ_*` }, { quoted });
+    },
+    async alive({ sock, jid, quoted }) {
+      const totalSeconds = Math.floor((Date.now() - global.botStartTime) / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      await sock.sendMessage(jid, {
+        text: `I'm here and ready 🚀\nUptime : ${hours} hours${minutes ? `${minutes} minutes ` : ""}${seconds} seconds`
+      }, { quoted });
+    },
+    async fullpp({ sock, jid, quoted, prefix }) {
+      await handleFullppCommand({ sock, jid, quoted, msg: quoted, prefix });
+    },
+    async online({ sock, jid, quoted, args }) {
+      const action = args[0]?.toLowerCase();
+      if (action === "on") {
+        botSettings.online = true; 
+        await saveSettings();
+        syncOnlinePresence();
+        await sock.sendMessage(jid, { text: "✅ Always Online: ON" }, { quoted });
+      } else if (action === "off") {
+        botSettings.online = false; 
+        await saveSettings();
+        syncOnlinePresence();
+        await sock.sendMessage(jid, { text: "✅ Always Online: OFF" }, { quoted });
+      } else {
+        await sock.sendMessage(jid, { text: `⚠️ Usage: ${botSettings.prefix || "."}online on / ${botSettings.prefix || "."}online off` }, { quoted });
       }
+    },
+    async status({ sock, jid, quoted, args }) {
+      const action = args[0]?.toLowerCase();
+      if (action === "on" || action === "seen on") {
+        botSettings.status = true; 
+        await saveSettings();
+        await sock.sendMessage(jid, { text: "✅ Auto Status Seen: ON" }, { quoted });
+      } else if (action === "off" || action === "seen off") {
+        botSettings.status = false; 
+        await saveSettings();
+        await sock.sendMessage(jid, { text: "✅ Auto Status Seen: OFF" }, { quoted });
+      } else {
+        await sock.sendMessage(jid, { text: `⚠️ Usage: ${botSettings.prefix || "."}status on / ${botSettings.prefix || "."}status off` }, { quoted });
+      }
+    }
+  };
+
+  const ownerOnlyCommands = new Set(["fullpp", "online", "status", "prefix"]);
+
+  sock.ev.on("messages.upsert", async ({ messages }) => {
+    for (const msg of messages || []) {
+      try {
+        if (!msg?.message) continue;
+
+        const jid = msg.key?.remoteJid || "";
+
+        if (botSettings.status && (jid === "status@broadcast" || jid.endsWith("@broadcast"))) {
+          sock.readMessages([msg.key]).catch(() => {});
+          continue;
+        }
+
+        if (jid.endsWith("@g.us") || jid.endsWith("@broadcast") || jid.endsWith("@newsletter")) continue;
+
+        const text = getText(msg);
+        if (!text) continue;
+
+        const prefix = botSettings.prefix || "";
+        const trimmed = text.trim();
+        
+        let commandText = "";
+        let args = [];
+
+        if (prefix && trimmed.startsWith(prefix)) {
+          const parts = trimmed.slice(prefix.length).trim().split(/\s+/);
+          commandText = parts[0].toLowerCase();
+          args = parts.slice(1);
+        } else if (!prefix) {
+          const parts = trimmed.split(/\s+/);
+          commandText = parts[0].toLowerCase();
+          args = parts.slice(1);
+        } else {
+          continue;
+        }
+
+        if (ownerOnlyCommands.has(commandText) && !isOwnerCommand(msg, jid, number)) {
+          await sock.sendMessage(jid, {
+            text: "⛔ Oɴʟʏ ᴛʜᴇ Bᴏᴛ Oᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ"
+          }, { quoted: msg });
+          continue;
+        }
+
+        if (commandText === "prefix") {
+          if (args.length === 0) {
+            await sock.sendMessage(jid, { 
+              text: `⚠️ *Uꜱaɢᴇ:* \`${prefix || "."}ᴩʀᴇꜰɪx (ꜱyᴍʙᴏʟ)\`\n*E.ɢ.:* \`${prefix || "."}ᴩʀᴇꜰɪx !\` ᴏʀ \`${prefix || "."}ᴩʀᴇꜰɪx nulʟ\`` 
+            }, { quoted: msg });
+            continue;
+          }
+
+          const newSymbol = args[0];
+
+          if (newSymbol.toLowerCase() === "null" || newSymbol.toLowerCase() === "none") {
+            botSettings.prefix = "";
+            await saveSettings();
+            await sock.sendMessage(jid, { text: "✅ Prefix has been successfully *Removed* (No prefix required now)." }, { quoted: msg });
+            continue;
+          }
+
+          if (newSymbol.length > 3 || /^[a-zA-Z0-9]$/.test(newSymbol)) {
+            await sock.sendMessage(jid, { 
+              text: "❌ Invalid Prefix! Prefix must be a symbol/emoji (max 3 characters) and cannot be a standard alphabet or number." 
+            }, { quoted: msg });
+            continue;
+          }
+
+          botSettings.prefix = newSymbol;
+          await saveSettings();
+          await sock.sendMessage(jid, { text: `✅ Prefix successfully changed to: \`${newSymbol}\`` }, { quoted: msg });
+          continue;
+        }
+
+        const handler = commands[commandText];
+        if (handler) {
+          await handler({ sock, jid, quoted: msg, args, prefix });
+        }
+      } catch (e) {}
     }
   });
 }
 
-Process.on("uncaughtException", () => {});
-Process.on("unhandledRejection", () => {});
+process.on("uncaughtException", () => {});
+process.on("unhandledRejection", () => {});
 
-Start().then(() => {
-  For (const number of readSessionNumbers()) {
-    Const sessionDir = path.join(SESSION_ROOT, number);
-    If (fs.existsSync(path.join(sessionDir, "creds.json"))) {
-      Start(number, sessionDir).catch(() => {});
+start().then(() => {
+  for (const number of readSessionNumbers()) {
+    const sessionDir = path.join(SESSION_ROOT, number);
+    if (fs.existsSync(path.join(sessionDir, "creds.json"))) {
+      start(number, sessionDir).catch(() => {});
     }
   }
 }).catch(() => { process.exit(1); });
