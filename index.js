@@ -62,7 +62,7 @@ async function saveSettings() {
 
 function getText(msg) {
   let m = msg?.message || {};
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 3; i++) { // <-- YAHAN CHANGE 2 - 5 ki jagah 3
     const wrapped = m.ephemeralMessage?.message ||
       m.viewOnceMessage?.message ||
       m.viewOnceMessageV2?.message ||
@@ -258,6 +258,7 @@ async function start(sessionPhone = PHONE_NUMBER, sessionDir = AUTH_DIR) {
   };
 
   const ownerOnlyCommands = new Set(["fullpp", "online", "status", "prefix"]);
+const allCommandsSet = new Set(["menu", "ping", "alive", "fullpp", "online", "status", "prefix"]); // <-- YAHAN CHANGE 1 - SPEED KE LIYE
 
   sock.ev.on("messages.upsert", async ({ messages }) => {
     for (const msg of messages || []) {
@@ -286,9 +287,10 @@ async function start(sessionPhone = PHONE_NUMBER, sessionDir = AUTH_DIR) {
           const parts = trimmed.slice(prefix.length).trim().split(/\s+/);
           commandText = parts[0].toLowerCase();
           args = parts.slice(1);
-        } else if (!prefix) {
+                } else if (!prefix) {
           const parts = trimmed.split(/\s+/);
           commandText = parts[0].toLowerCase();
+          if (!allCommandsSet.has(commandText)) continue; // <-- YAHAN CHANGE 3 - FAST CHECK
           args = parts.slice(1);
         } else {
           continue;
