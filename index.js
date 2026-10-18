@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.get('/', (req, res) => res.send('DEVA BOT IS ALIVE'));
-app.listen(PORT, () => console.log('Web server running'));
+app.get('/', (req, res) => res.send('DEVA ULTRA BOT IS ALIVE 🚀'));
+app.listen(PORT, () => console.log('Web Server Running on Port ' + PORT));
 const {
   default: makeWASocket,
   useMultiFileAuthState,
