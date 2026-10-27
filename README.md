@@ -1,6 +1,18 @@
+### 🚀 Panel Deploy — DEVA XMD BOT
 
-### Pannel Deploy create file naam `index.js`
-`PHONE_NUMBER` Ki jagah apna number daale
+📌 Hosting pannel पर Deploy कैसे करें
+
+Step 1: Hosting Panel खोलें।
+
+Step 2: एक नई फाइल बनाएँ और उसका नाम "index.js" रखें।
+
+Step 3: नीचे दिए गए GitHub repository से deployment code कॉपी करके "index.js" में डालें।
+
+Step 4: कोड में "PHONE_NUMBER" की जगह अपना WhatsApp नंबर country code के साथ लिखें।
+
+const PHONE_NUMBER = "91XXXXXXXXXX";
+
+Step 5: फाइल Save करें और Panel में bot Start करें।
 
 ```js
 const { spawn } = require("child_process");
