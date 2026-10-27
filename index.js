@@ -219,17 +219,26 @@ async function start(sessionPhone = PHONE_NUMBER, sessionDir = AUTH_DIR) {
       await sock.sendMessage(jid, { text: `🏓 Pong!\n⏱️ *_DEVA XMD BOT Sᴘᴇᴇᴅ: ${Date.now() - started} Mꜱ_*` }, { quoted });
     },
     async alive({ sock, jid, quoted }) {
-      const totalSeconds = Math.floor((Date.now() - global.botStartTime) / 1000);
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-      await sock.sendMessage(jid, {
-        text: `I'm here and ready 🚀\nUptime : ${hours} hours ${minutes ? `${minutes} minutes ` : ""}${seconds} seconds`
-      }, { quoted });
-    },
-    async fullpp({ sock, jid, quoted, prefix }) {
-      await handleFullppCommand({ sock, jid, quoted, msg: quoted, prefix });
-    },
+  const totalSeconds = Math.floor(
+    (Date.now() - global.botStartTime) / 1000
+  );
+
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const uptime = [
+    days ? `${days} day${days !== 1 ? "s" : ""}` : "",
+    hours ? `${hours} hour${hours !== 1 ? "s" : ""}` : "",
+    minutes ? `${minutes} minute${minutes !== 1 ? "s" : ""}` : "",
+    `${seconds} seconds`
+  ].filter(Boolean).join(" ");
+
+  await sock.sendMessage(jid, {
+    text: `I'm here and ready 🚀\nUptime : ${uptime}`
+  }, { quoted });
+},
     async online({ sock, jid, quoted, args }) {
       const action = args[0]?.toLowerCase();
       if (action === "on") {
