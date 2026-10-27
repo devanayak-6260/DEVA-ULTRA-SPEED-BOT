@@ -1,56 +1,136 @@
+
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const sharp = require("sharp");
 
-const unwrap = (message) => {
-  for (let i = 0; message && i < 5; i++) {
-    const next = message.viewOnceMessage?.message
-      || message.viewOnceMessageV2?.message
-      || message.viewOnceMessageV2Extension?.message
-      || message.ephemeralMessage?.message;
-    if (!next) break;
-    message = next;
-  }
-  return message || null;
-};
+function unwrapMessage(message) {
+  let current = message;
 
-async function handleFullppCommand({ sock, jid, quoted, msg, prefix = "." }) {
+  for (let i = 0; i < 5 && current; i++) {
+    const next =
+      current.viewOnceMessage?.message ||
+      current.viewOnceMessageV2?.message ||
+      current.viewOnceMessageV2Extension?.message ||
+      current.ephemeralMessage?.message;
+
+    if (!next) break;
+    current = next;
+  }
+
+  return current || null;
+}
+
+function getQuotedMessage(msg) {
+  return (
+    msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage ||
+    null
+  );
+}
+
+function getImageMessage(msg) {
+  const direct = unwrapMessage(msg?.message);
+  const quoted = unwrapMessage(getQuotedMessage(msg));
+
+  return direct?.imageMessage || quoted?.imageMessage || null;
+}
+
+async function streamToBuffer(stream) {
+  const chunks = [];
+
+  for await (const chunk of stream) {
+    chunks.push(chunk);
+  }
+
+  return Buffer.concat(chunks);
+}
+
+async function downloadQuotedImage(msg) {
+  const image = getImageMessage(msg);
+
+  if (!image) return null;
+
+  const stream = await downloadContentFromMessage(image, "image");
+  return streamToBuffer(stream);
+}
+
+async function setProfilePicture(sock, imageBuffer) {
+  const resized = await sharp(imageBuffer)
+    .resize(640, 640, {
+      fit: "cover",
+      position: "centre"
+    })
+    .jpeg({ quality: 90 })
+    .toBuffer();
+
+  // Use Baileys' built-in method when available.
+  if (typeof sock.updateProfilePicture === "function") {
+    return sock.updateProfilePicture(sock.user.id, resized);
+  }
+
+  // Fallback for socket implementations without that method.
+  return sock.query({
+    tag: "iq",
+    attrs: {
+      to: "s.whatsapp.net",
+      type: "set",
+      xmlns: "w:profile:picture"
+    },
+    content: [
+      {
+        tag: "picture",
+        attrs: { type: "image" },
+        content: resized
+      }
+    ]
+  });
+}
+
+async function handleFullppCommand({
+  sock,
+  jid,
+  quoted,
+  msg,
+  prefix = "."
+}) {
   try {
-    const quotedImage = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    const image = unwrap(msg?.message)?.imageMessage || unwrap(quotedImage)?.imageMessage;
-    
-    if (!image) {
-      await sock.sendMessage(jid, {
-        text: `❌ Reply to an image with *${prefix}fullpp* to set it as the bot profile picture.`
-      }, { quoted });
+    const imageBuffer = await downloadQuotedImage(msg);
+
+    if (!imageBuffer) {
+      await sock.sendMessage(
+        jid,
+        {
+          text: `❌ Reply to an image with *${prefix}fullpp* to set it as the bot profile picture.`
+        },
+        { quoted }
+      );
       return;
     }
 
-    await sock.sendMessage(jid, { text: "⏳ Processing image for profile picture..." }, { quoted });
+    await sock.sendMessage(
+      jid,
+      { text: "⏳ Processing image for profile picture..." },
+      { quoted }
+    );
 
-    // Download media chunks efficiently
-    const stream = await downloadContentFromMessage(image, "image");
-    const chunks = [];
-    for await (const chunk of stream) {
-      chunks.push(chunk);
-    }
-    const buffer = Buffer.concat(chunks);
+    await setProfilePicture(sock, imageBuffer);
 
-    // Resize and crop/fit image using sharp for WhatsApp profile picture (Square ratio recommended)
-    const resized = await sharp(buffer)
-      .resize(640, 640, { fit: "cover" })
-      .jpeg({ quality: 90 })
-      .toBuffer();
-
-    // Update Bot Profile Picture using Baileys built-in method / query
-    await sock.updateProfilePicture(sock.user.id, resized);
-
-    await sock.sendMessage(jid, { text: "✅ Bot profile picture updated successfully!" }, { quoted });
+    await sock.sendMessage(
+      jid,
+      { text: "✅ Bot profile picture updated successfully!" },
+      { quoted }
+    );
   } catch (e) {
-    console.error("Error in fullpp command:", e);
-    await sock.sendMessage(jid, { text: `❌ Failed to update profile picture. Error: ${e.message}` }, { quoted });
+    console.error("FULLPP ERROR:", e?.message || e);
+
+    await sock.sendMessage(
+      jid,
+      {
+        text: `❌ Failed to update profile picture.\n\n${e?.message || "Unknown error"}`
+      },
+      { quoted }
+    );
   } finally {
-    try { 
-      await sock.sendPresenceUpdate("paused", jid); 
+    try {
+      await sock.sendPresenceUpdate("paused", jid);
     } catch {}
   }
 }
