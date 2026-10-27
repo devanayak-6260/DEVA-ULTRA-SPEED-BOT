@@ -1,4 +1,4 @@
-### 🚀 Panel Deploy — DEVA XMD BOT
+# 🚀 PANEL DEPLOY — DEVA-ULTRA-SPEED-BOT
 
 📌 Hosting pannel पर Deploy कैसे करें
 
