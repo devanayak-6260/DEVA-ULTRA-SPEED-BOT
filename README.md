@@ -1,7 +1,6 @@
 
 ### Pannel Deploy create file naam `index.js`
-
-Save the installer below as `index.js` in an empty folder. Install [Node.js 20+](https://nodejs.org/) and Git first, then set `PHONE_NUMBER` to your own WhatsApp number in international format (digits only, no `+` or spaces).
+`PHONE_NUMBER` Ki jagah apna number daale
 
 ```js
 const { spawn } = require("child_process");
