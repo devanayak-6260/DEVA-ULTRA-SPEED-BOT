@@ -195,31 +195,6 @@ async function main() {
 
 ---
 
-### 👑 CREATED BY
-
-<p align="center">
-  <a href="https://github.com/devanayak-6260">
-    <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="200" style="border-radius:50%"/>
-  </a>
-</p>
-
-<p align="center">
-  <b>DEVA NAYAK</b> <br>
-  Founder of DEVA ULTRA SPEED BOT
-</p>
-
-<p align="center">
-  <a href="https://github.com/devanayak-6260"><img src="https://img.shields.io/badge/GitHub-DEVA-black?style=for-the-badge&logo=github" /></a>
-  <a href="https://wa.me/917489501087"><img src="https://img.shields.io/badge/WhatsApp-Contact-25D366?style=for-the-badge&logo=whatsapp" /></a>
-  <a href="https://www.youtube.com/@YOUR_CHANNEL"><img src="https://img.shields.io/badge/YouTube-Subscribe-FF0000?style=for-the-badge&logo=youtube" /></a>
-</p>
-
-**Special Thanks To:**
-- ⚡ **Baileys** - For Base Library
-- 💻 **Deva Team** - For Testing & Ideas
-- ❤️ **All Users & Supporters**
-
-> Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
 
 <h1 align="center">
   <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=80&lines=👑+DEVA+ULTRA+EMPIRE+👑;POWERED+BY+DEVA+NAYAK" />
@@ -237,3 +212,5 @@ async function main() {
 
 <p align="center">
   <a href="https://github.com/devanayak-6260"><img src="https://img.shields.io/badge/DEVA-GITHUB-000?style=for-the-badge&logo=github&logoColor
+
+##  > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
