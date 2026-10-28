@@ -202,3 +202,45 @@ async function main() {
   <a href="https://wa.me/917489501087"><img src="https://img.shields.io/badge/Chat%20Owner-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
   
 > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
+
+---
+
+<h2 align="center">👑 ᴄʀᴇᴀᴛᴏʀ & ᴅᴇᴠᴇʟᴏᴘᴇʀ 👑</h2>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/FOUNDER-DEVA%20NAYAK-8A2BE2?style=for-the-badge&logo=github&logoColor=white" />
+</p>
+
+<p align="center">
+  <b>⚡ DEVA ULTRA SPEED BOT ⚡</b>
+  <br />
+  <sub>Built with Passion • Designed for Speed • Made for Simplicity</sub>
+</p>
+
+<p align="center">
+  <a href="https://github.com/devanayak-6260">
+    <img src="https://img.shields.io/badge/GitHub-Follow%20Developer-181717?style=for-the-badge&logo=github" />
+  </a>
+  <a href="https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT">
+    <img src="https://img.shields.io/badge/Repository-View%20Project-238636?style=for-the-badge&logo=github" />
+  </a>
+</p>
+
+<p align="center">
+  ⭐ LIKE THE PROJECT? GIVE IT A STAR ⭐
+  <br />
+  ❤️ Thank you for supporting DEVA XMD BOT
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/POWERED%20BY-DEVA%20NAYAK-00BFFF?style=flat-square" />
+  <img src="https://img.shields.io/badge/STATUS-ACTIVE-00C853?style=flat-square" />
+</p>
+
+<p align="center">
+  <sub>© 2026 DEVA ULTRA SPEED BOT • Created & Maintained by DEVA NAYAK</sub>
+</p>
+
+<p align="center">
+  <sub>For educational and personal use. Follow WhatsApp's terms and applicable laws.</sub>
+</p>
