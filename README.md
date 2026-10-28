@@ -1,4 +1,11 @@
-<div align="center"><img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="100%" /><img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=700&color=00F7FF&center=true&vCenter=true&width=900&height=80&lines=%F0%9F%91%91+DEVA+ULTRA+SPEED+BOT+%F0%9F%91%91;%E2%9A%A1+ULTRA+FAST+WHATSAPP+BOT+%E2%9A%A1;%F0%9F%92%8E+POWERED+BY+DEVA+NAYAK+%F0%9F%92%8E" width="100%" /><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=19&pause=600&color=FF00FF&center=true&vCenter=true&width=800&height=45&lines=MULTI-DEVICE+%7C+FAST+%7C+SECURE;WELCOME+TO+THE+DEVA+ULTRA+EMPIRE;CODED+WITH+%E2%9D%A4%EF%B8%8F+BY+DEVA" width="100%" /><img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&height=4&section=header" width="100%" 
+<p align="center">
+  <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="100%" />
+</p>
+
+<h1 align="center">👑 DEVA ULTRA SPEED BOT 👑</h1>
+<h3 align="center">⚡ FASTEST WHATSAPP BOT ⚡</h3>
+<h4 align="center">Multi-Device | Fast | Secure | Feature Rich</h4>
+
 <p align="center">
   <a href="https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT"><img src="https://img.shields.io/github/stars/devanayak-6260/DEVA-ULTRA-SPEED-BOT?style=for-the-badge&color=yellow" /></a>
   <a href="https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT/fork"><img src="https://img.shields.io/github/forks/devanayak-6260/DEVA-ULTRA-SPEED-BOT?style=for-the-badge&color=blue" /></a>
@@ -213,3 +220,20 @@ async function main() {
 - ❤️ **All Users & Supporters**
 
 > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
+
+<h1 align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=80&lines=👑+DEVA+ULTRA+EMPIRE+👑;POWERED+BY+DEVA+NAYAK" />
+</h1>
+
+<p align="center">
+  <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="300" style="border-radius: 50%; box-shadow: 0 0 50px #FFD700; border: 6px solid #FFD700;" />
+</p>
+
+<h2 align="center">⚡ DEVA NAYAK - THE LEGEND ⚡</h2>
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=18&pause=800&color=00FF00&center=true&vCenter=true&width=700&lines=👑+Founder+of+DEVA+ULTRA+SPEED+BOT;💻+Full+Stack+Developer+%7C+Bot+King;🚀+Making+WhatsApp+Bots+Since+2023;💎+Fastest+Bot+Developer+In+India" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/devanayak-6260"><img src="https://img.shields.io/badge/DEVA-GITHUB-000?style=for-the-badge&logo=github&logoColor
