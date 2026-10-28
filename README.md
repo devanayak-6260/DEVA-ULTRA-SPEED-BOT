@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">👑 DEVA ULTRA SPEED BOT 👑</h1>
-<h3 align="center">⚡ Fastest WhatsApp Bot ⚡</h3>
+<h3 align="center">⚡ FASTEST WHATSAPP BOT ⚡</h3>
 
 ---
 
