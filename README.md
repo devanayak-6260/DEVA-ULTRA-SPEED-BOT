@@ -211,3 +211,5 @@ async function main() {
 
 <p align="center">
   <a href="https://github.com/devanayak-6260"><img src="https://img.shields.io/badge/DEVA-GITHUB-000?style=for-the-badge&logo=github&logoColor
+
+  > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
