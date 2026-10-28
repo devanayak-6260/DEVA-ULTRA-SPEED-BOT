@@ -196,5 +196,4 @@ async function main() {
 ---
 
 
-
-##  > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
+ > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
