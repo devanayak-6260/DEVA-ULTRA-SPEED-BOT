@@ -220,3 +220,20 @@ async function main() {
 - ❤️ **All Users & Supporters**
 
 > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
+
+<h1 align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=80&lines=👑+DEVA+ULTRA+EMPIRE+👑;POWERED+BY+DEVA+NAYAK" />
+</h1>
+
+<p align="center">
+  <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="300" style="border-radius: 50%; box-shadow: 0 0 50px #FFD700; border: 6px solid #FFD700;" />
+</p>
+
+<h2 align="center">⚡ DEVA NAYAK - THE LEGEND ⚡</h2>
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=18&pause=800&color=00FF00&center=true&vCenter=true&width=700&lines=👑+Founder+of+DEVA+ULTRA+SPEED+BOT;💻+Full+Stack+Developer+%7C+Bot+King;🚀+Making+WhatsApp+Bots+Since+2023;💎+Fastest+Bot+Developer+In+India" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/devanayak-6260"><img src="https://img.shields.io/badge/DEVA-GITHUB-000?style=for-the-badge&logo=github&logoColor
