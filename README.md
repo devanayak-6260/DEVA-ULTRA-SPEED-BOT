@@ -20,11 +20,6 @@
 
 ---
 
-### ✨ BOT FEATURES
-
-- 🚀 **Ultra Speed** - 0.1s Response Time
-- 🔰 **Multi Device** Support
-- 🛡️ **Anti-Ban** System
 
 ---
 
