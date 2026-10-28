@@ -1,6 +1,9 @@
 <p align="center">
   <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="100%" />
 </p>
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=18&pause=800&color=00FF00&center=true&vCenter=true&width=700&lines=👑+Founder+of+DEVA+ULTRA+SPEED+BOT;💻+Full+Stack+Developer+%7C+Bot+King;🚀+Making+WhatsApp+Bots+Since+2023;💎+Fastest+Bot+Developer+In+India" />
+</p>
 
 <h1 align="center">👑 DEVA ULTRA SPEED BOT 👑</h1>
 <h3 align="center">⚡ FASTEST WHATSAPP BOT ⚡</h3>
