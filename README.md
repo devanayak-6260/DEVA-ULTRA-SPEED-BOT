@@ -196,10 +196,8 @@ async function main() {
 ---
 
 
- > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
 > ### 👑 Created By DEVA NAYAK
 > 🚀 Founder & CEO - DEVA ULTRA BOT
 > 📞 Contact: wa.me/917489501087
 > 🌐 GitHub: devanayak-6260
-> © 2026 All Rights Reserved
 > > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
