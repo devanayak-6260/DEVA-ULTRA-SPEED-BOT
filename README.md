@@ -198,19 +198,6 @@ async function main() {
 
 > ## 👑 Cʀᴇᴀᴛᴇᴅ Bʏ Dᴇᴠᴀ Nᴀʏᴀᴋ
 > 🚀 Founder & CEO - DEVA ULTRA BOT
-<p align="center">
-  <a href="https://wa.me/917489501087"><img src="https://img.shields.io/badge/Chat%20Owner-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
-
-
----
-
-<h3 align="center">👑 ᴅᴇᴠᴀ ɴᴀʏᴀᴋ</h3>
-
-<p align="center">
-  💻 Developer & Creator
-  <br>
-  ⚡ DEVA ULTRA SPEED BOT
-</p>
 
 <p align="center">
   <a href="https://github.com/devanayak-6260">
