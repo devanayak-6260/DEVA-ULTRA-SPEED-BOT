@@ -1,1 +1,232 @@
 <div align="center"><img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="100%" /><img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=700&color=00F7FF&center=true&vCenter=true&width=900&height=80&lines=%F0%9F%91%91+DEVA+ULTRA+SPEED+BOT+%F0%9F%91%91;%E2%9A%A1+ULTRA+FAST+WHATSAPP+BOT+%E2%9A%A1;%F0%9F%92%8E+POWERED+BY+DEVA+NAYAK+%F0%9F%92%8E" width="100%" /><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=19&pause=600&color=FF00FF&center=true&vCenter=true&width=800&height=45&lines=MULTI-DEVICE+%7C+FAST+%7C+SECURE;WELCOME+TO+THE+DEVA+ULTRA+EMPIRE;CODED+WITH+%E2%9D%A4%EF%B8%8F+BY+DEVA" width="100%" /><img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&height=4&section=header" width="100%" 
+<p align="center">
+  <a href="https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT"><img src="https://img.shields.io/github/stars/devanayak-6260/DEVA-ULTRA-SPEED-BOT?style=for-the-badge&color=yellow" /></a>
+  <a href="https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT/fork"><img src="https://img.shields.io/github/forks/devanayak-6260/DEVA-ULTRA-SPEED-BOT?style=for-the-badge&color=blue" /></a>
+  <img src="https://img.shields.io/github/repo-size/devanayak-6260/DEVA-ULTRA-SPEED-BOT?color=green&label=Repo%20Size&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Version-4.1-red?style=for-the-badge" />
+</p>
+
+<p align="center">
+  <a href="https://wa.me/917489501087"><img src="https://img.shields.io/badge/Chat%20Owner-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+  <a href="https://whatsapp.com/channel/0029Va..."><img src="https://img.shields.io/badge/Join%20Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+</p>
+
+---
+
+
+---
+## 🚀 PANEL DEPLOY — DEVA-ULTRA-SPEED-BOT
+
+### 📌 Hosting pannel पर Deploy कैसे करें
+
+### Step 1: Hosting Panel खोलें।
+
+### Step 2: एक नई फाइल बनाएँ और उसका नाम "index.js" रखें।
+
+### Step 3: नीचे दिए गए GitHub repository से deployment code कॉपी करके "index.js" में डालें।
+
+### Step 4: कोड में "PHONE_NUMBER" की जगह अपना WhatsApp नंबर country code के साथ लिखें।
+
+### const PHONE_NUMBER = "91XXXXXXXXXX";
+
+### Step 5: फाइल Save करें और Panel में bot Start करें।
+
+```js
+const { spawn } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+const REPO =
+  "https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT.git";
+
+const PHONE_NUMBER = "917489501087";
+const BOT_DIR = path.join(__dirname, "DEVA_XMD_BOT");
+
+function run(command, args, options = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      ...options,
+      stdio: "inherit"
+    });
+
+    child.on("error", reject);
+
+    child.on("close", code => {
+      if (code === 0) resolve();
+      else reject(
+        new Error(`${command} exited with code ${code}`)
+      );
+    });
+  });
+}
+
+async function main() {
+  try {
+    if (!fs.existsSync(path.join(BOT_DIR, ".git"))) {
+      if (fs.existsSync(BOT_DIR)) {
+        throw new Error(
+          "DEVA_XMD_BOT folder exists but is not a Git repository. Rename or back it up first."
+        );
+      }
+
+      console.log("Downloading bot from GitHub...");
+      await run("git", ["clone", REPO, BOT_DIR]);
+    } else {
+      console.log("Updating bot from GitHub...");
+      await run("git", ["pull", "--ff-only"], {
+        cwd: BOT_DIR
+      });
+    }
+
+    const packagePath = path.join(BOT_DIR, "package.json");
+
+    if (!fs.existsSync(packagePath)) {
+      throw new Error("package.json not found in the repository.");
+    }
+
+    const packageData = JSON.parse(
+      fs.readFileSync(packagePath, "utf8")
+    );
+
+    // Always create/update phone.js
+    const phonePath = path.join(BOT_DIR, "phone.js");
+    const phoneNumber = (
+      process.env.PHONE_NUMBER || PHONE_NUMBER
+    ).replace(/\D/g, "");
+
+    if (!phoneNumber) {
+      throw new Error("PHONE_NUMBER is missing.");
+    }
+
+    fs.writeFileSync(
+      phonePath,
+      `module.exports = "${phoneNumber}";\n`,
+      "utf8"
+    );
+
+    console.log("phone.js updated successfully.");
+
+    console.log("Installing dependencies...");
+    await run("npm", ["install", "--no-audit", "--no-fund"], {
+      cwd: BOT_DIR
+    });
+
+    if (!packageData.scripts?.start) {
+      throw new Error(
+        "No npm start script found. Check package.json."
+      );
+    }
+
+    console.log("Starting DEVA XMD BOT...");
+
+    await run("npm", ["start"], {
+      cwd: BOT_DIR,
+      env: {
+        ...process.env,
+        PHONE_NUMBER: phoneNumber
+      }
+    });
+  } catch (error) {
+    console.error("BOT START ERROR:", error.message);
+    process.exitCode = 1;
+  }
+}
+
+```
+
+---
+
+#### 2️⃣ RENDER DEPLOY
+1.  [Render.com](https://dashboard.render.com/) पर जाओ > New Web Service
+2.  GitHub Repo Connect करो: `devanayak-6260/DEVA-ULTRA-SPEED-BOT`
+3.  Build Command: `npm install`
+4.  Start Command: `npm start`
+5.  Environment Variables में add करो: `PHONE_NUMBER = 91XXXXXXXXXX`
+6.  Deploy करो
+
+#### 3️⃣ KOYEB DEPLOY
+1.  [Koyeb.com](https://app.koyeb.com/) पर जाओ
+2.  Create App > Deploy from GitHub
+3.  Repo Select करो
+4.  Builder: `Node.js`
+5.  Run Command: `npm start`
+6.  Env Variable: `PHONE_NUMBER`
+7.  Deploy
+
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT)
+
+#### 4️⃣ RAILWAY DEPLOY
+1.  [Railway.app](https://railway.app/) पर जाओ > New Project > Deploy from GitHub
+2.  Repo Select करो
+3.  Variables में `PHONE_NUMBER` add करो
+4.  Deploy करेगा, Logs में QR / Pairing Code आएगा
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/github/devanayak-6260/DEVA-ULTRA-SPEED-BOT)
+
+---
+
+### 🔧 ENV VARIABLES
+
+| Variable | Required | Example |
+| :--- | :--- | :--- |
+| `PHONE_NUMBER` | Yes | `917489501087` |
+| `SESSION_ID` | No | Auto Generate |
+
+---
+### ⚠️ DISCLAIMER
+
+> **This project is made for Educational & Fun purpose only.**
+> This bot is NOT affiliated with WhatsApp Inc. in any way.
+
+**PLEASE NOTE:**
+- ✅ Use this bot for learning and personal use only.
+- ❌ Do not use this bot for spamming, harassing or any illegal activity.
+- ❌ Selling this bot or removing developer credit is strictly prohibited.
+- ❌ We do not collect any of your personal data or chats.
+
+> If you love this project, please give a ⭐ Star and respect the original developer.
+
+---
+
+### 👑 CREATED BY
+
+<p align="center">
+  <a href="https://github.com/devanayak-6260">
+    <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="200" style="border-radius:50%"/>
+  </a>
+</p>
+
+<p align="center">
+  <b>DEVA NAYAK</b> <br>
+  Founder of DEVA ULTRA SPEED BOT
+</p>
+
+<p align="center">
+  <a href="https://github.com/devanayak-6260"><img src="https://img.shields.io/badge/GitHub-DEVA-black?style=for-the-badge&logo=github" /></a>
+  <a href="https://wa.me/917489501087"><img src="https://img.shields.io/badge/WhatsApp-Contact-25D366?style=for-the-badge&logo=whatsapp" /></a>
+  <a href="https://www.youtube.com/@YOUR_CHANNEL"><img src="https://img.shields.io/badge/YouTube-Subscribe-FF0000?style=for-the-badge&logo=youtube" /></a>
+</p>
+
+**Special Thanks To:**
+- ⚡ **Baileys** - For Base Library
+- 💻 **Deva Team** - For Testing & Ideas
+- ❤️ **All Users & Supporters**
+
+> Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
+
+<h1 align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=80&lines=👑+DEVA+ULTRA+EMPIRE+👑;POWERED+BY+DEVA+NAYAK" />
+</h1>
+
+<p align="center">
+  <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="300" style="border-radius: 50%; box-shadow: 0 0 50px #FFD700; border: 6px solid #FFD700;" />
+</p>
+
+<h2 align="center">⚡ DEVA NAYAK - THE LEGEND ⚡</h2>
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=18&pause=800&color=00FF00&center=true&vCenter=true&width=700&lines=👑+Founder+of+DEVA+ULTRA+SPEED+BOT;💻+Full+Stack+Developer+%7C+Bot+King;🚀+Making+WhatsApp+Bots+Since+2023;💎+Fastest+Bot+Developer+In+India" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/devanayak-6260"><img src="https://img.shields.io/badge/DEVA-GITHUB-000?style=for-the-badge&logo=github&logoColor
