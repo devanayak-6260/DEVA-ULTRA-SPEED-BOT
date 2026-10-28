@@ -9,7 +9,9 @@
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=18&pause=800&color=00FF00&center=true&vCenter=true&width=700&lines=👑+Founder+of+DEVA+ULTRA+SPEED+BOT;💻+Full+Stack+Developer+%7C+Bot+King;🚀+Making+WhatsApp+Bots+Since+2023;💎+Fastest+Bot+Developer+In+India" />
 </p>
 
-<h1 align="center">👑 DEVA ULTRA SPEED BOT 👑</h1>
+<h1 align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=80&lines=👑+DEVA+ULTRA+EMPIRE+👑;POWERED+BY+DEVA+NAYAK" />
+</h1>
 <h3 align="center">⚡ FASTEST WHATSAPP BOT ⚡</h3>
 <h4 align="center">Multi-Device | Fast | Secure | Feature Rich</h4>
 
