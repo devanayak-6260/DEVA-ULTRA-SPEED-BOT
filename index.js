@@ -219,26 +219,17 @@ async function start(sessionPhone = PHONE_NUMBER, sessionDir = AUTH_DIR) {
       await sock.sendMessage(jid, { text: `🏓 Pong!\n⏱️ *_DEVA XMD BOT Sᴘᴇᴇᴅ: ${Date.now() - started} Mꜱ_*` }, { quoted });
     },
     async alive({ sock, jid, quoted }) {
-  const totalSeconds = Math.floor(
-    (Date.now() - global.botStartTime) / 1000
-  );
-
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  const uptime = [
-    days ? `${days} day${days !== 1 ? "s" : ""}` : "",
-    hours ? `${hours} hour${hours !== 1 ? "s" : ""}` : "",
-    minutes ? `${minutes} minute${minutes !== 1 ? "s" : ""}` : "",
-    `${seconds} seconds`
-  ].filter(Boolean).join(" ");
-
-  await sock.sendMessage(jid, {
-    text: `I'm here and ready 🚀\nUptime : ${uptime}`
-  }, { quoted });
-},
+      const totalSeconds = Math.floor((Date.now() - global.botStartTime) / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      await sock.sendMessage(jid, {
+        text: `I'm here and ready 🚀\nUptime : ${hours} hours ${minutes ? `${minutes} minutes ` : ""}${seconds} seconds`
+      }, { quoted });
+    },
+    async fullpp({ sock, jid, quoted, msg, prefix }) {
+      await handleFullppCommand({ sock, jid, quoted, msg, prefix });
+    },
     async online({ sock, jid, quoted, args }) {
       const action = args[0]?.toLowerCase();
       if (action === "on") {
@@ -349,15 +340,21 @@ const allCommandsSet = new Set(["menu", "ping", "alive", "fullpp", "online", "st
 
         const handler = commands[commandText];
         if (handler) {
-          await handler({ sock, jid, quoted: msg, args, prefix });
+          await handler({ sock, jid, quoted: msg, msg, args, prefix });
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error("MESSAGE HANDLER ERROR:", e?.stack || e?.message || e);
+      }
     }
   });
 }
 
-process.on("uncaughtException", () => {});
-process.on("unhandledRejection", () => {});
+process.on("uncaughtException", (e) => {
+  console.error("UNCAUGHT EXCEPTION:", e?.stack || e?.message || e);
+});
+process.on("unhandledRejection", (e) => {
+  console.error("UNHANDLED REJECTION:", e?.stack || e?.message || e);
+});
 
 start().then(() => {
   for (const number of readSessionNumbers()) {
