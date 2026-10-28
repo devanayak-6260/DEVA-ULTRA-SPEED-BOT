@@ -143,23 +143,48 @@ async function main() {
 
 ---
 
-### 🔧 DEPLOYMENT OPTIONS
+#### 2️⃣ RENDER DEPLOY
+1.  [Render.com](https://dashboard.render.com/) पर जाओ > New Web Service
+2.  GitHub Repo Connect करो: `devanayak-6260/DEVA-ULTRA-SPEED-BOT`
+3.  Build Command: `npm install`
+4.  Start Command: `npm start`
+5.  Environment Variables में add करो: `PHONE_NUMBER = 91XXXXXXXXXX`
+6.  Deploy करो
 
-| Platform | Deploy |
-| :--- | :--- |
-| **Heroku** | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT) |
-| **Replit** | [![Run on Replit](https://replit.com/badge/github/quivor/replit)](https://replit.com/github/devanayak-6260/DEVA-ULTRA-SPEED-BOT) |
-| **Koyeb** | [![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT) |
+#### 3️⃣ KOYEB DEPLOY
+1.  [Koyeb.com](https://app.koyeb.com/) पर जाओ
+2.  Create App > Deploy from GitHub
+3.  Repo Select करो
+4.  Builder: `Node.js`
+5.  Run Command: `npm start`
+6.  Env Variable: `PHONE_NUMBER`
+7.  Deploy
+
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT)
+
+#### 4️⃣ RAILWAY DEPLOY
+1.  [Railway.app](https://railway.app/) पर जाओ > New Project > Deploy from GitHub
+2.  Repo Select करो
+3.  Variables में `PHONE_NUMBER` add करो
+4.  Deploy करेगा, Logs में QR / Pairing Code आएगा
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/github/devanayak-6260/DEVA-ULTRA-SPEED-BOT)
+
+---
+
+### 🔧 ENV VARIABLES
+
+| Variable | Required | Example |
+| :--- | :--- | :--- |
+| `PHONE_NUMBER` | Yes | `917489501087` |
+| `SESSION_ID` | No | Auto Generate |
 
 ---
 
 ### ⚠️ WARNING
-- Ye bot WhatsApp Inc. se affiliated nahi hai.
-- Galat use se number ban ho sakta hai, hum zimmedar nahi.
-- Fork karke apne naam se mat becho.
+Ye bot WhatsApp Inc. se affiliated nahi hai. Galat use se ban ho sakta hai.
 
 ### 👑 CREDIT
-- **Owner:** Deva Nayak
-- **Base:** Baileys MD
+**Owner:** Deva Nayak
 
 > Made with ❤️ by DEVA
