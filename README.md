@@ -180,9 +180,18 @@ async function main() {
 | `SESSION_ID` | No | Auto Generate |
 
 ---
+### ⚠️ DISCLAIMER
 
-### ⚠️ WARNING
-Ye bot WhatsApp Inc. se affiliated nahi hai. Galat use se ban ho sakta hai.
+> **This project is made for Educational & Fun purpose only.**
+> This bot is NOT affiliated with WhatsApp Inc. in any way.
+
+**PLEASE NOTE:**
+- ✅ Use this bot for learning and personal use only.
+- ❌ Do not use this bot for spamming, harassing or any illegal activity.
+- ❌ Selling this bot or removing developer credit is strictly prohibited.
+- ❌ We do not collect any of your personal data or chats.
+
+> If you love this project, please give a ⭐ Star and respect the original developer.
 
 ### 👑 CREDIT
 **Owner:** Deva Nayak
