@@ -200,8 +200,6 @@ async function main() {
 > 🚀 Founder & CEO - DEVA ULTRA BOT
 <p align="center">
   <a href="https://wa.me/917489501087"><img src="https://img.shields.io/badge/Chat%20Owner-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
-  
-> Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
 
 
 ---
@@ -227,5 +225,4 @@ async function main() {
 </p>
 
 <p align="center">
-  © 2026 DEVA NAYAK ❤️
-</p>
+> Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
