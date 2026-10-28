@@ -197,3 +197,79 @@ async function main() {
 
 
  > Copyright © 2026 DEVA ULTRA SPEED BOT | Made with ❤️ by DEVA
+>
+>
+> <div align="center">
+
+![DEVA BANNER](https://capsule-render.vercel.app/api?type=waving&color=0:FFD700,50:FF1493,100:00FFFF&height=250&section=header&text=DEVA%20ULTRA&fontSize=70&fontColor=FFFFFF&animation=fadeIn&fontAlignY=35&desc=SPEED%20%7C%20POWER%20%7C%20EMPIRE&descAlignY=55&descSize=20)
+
+<img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="280" height="280" style="border-radius: 50%;" alt="DEVA"/>
+
+# ━━━━━━━ 👑 DEVA NAYAK 👑 ━━━━━━━
+
+<img src="https://readme-typing-svg.herokuapp.com?font=Black+Ops+One&size=25&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=60&lines=THE+BOT+KING+👑;THE+LEGEND+OF+WHATSAPP+BOTS;RULING+THE+BOT+WORLD+Since+2023;INDIA'S+FASTEST+BOT+DEVELOPER" />
+
+<br>
+
+<a href="https://github.com/devanayak-6260">
+<img src="https://img.shields.io/badge/‹𝟹_DEVA_GITHUB_›-000000?style=for-the-badge&logo=github&logoColor=FFD700&labelColor=000&color=FFD700" />
+</a>
+<a href="https://wa.me/917489501087">
+<img src="https://img.shields.io/badge/‹𝟹_DEVA_WHATSAPP_›-000000?style=for-the-badge&logo=whatsapp&logoColor=25D366&labelColor=000&color=25D366" />
+</a>
+<br>
+<a href="https://www.instagram.com/">
+<img src="https://img.shields.io/badge/‹𝟹_DEVA_INSTAGRAM_›-000000?style=for-the-badge&logo=instagram&logoColor=E4405F&labelColor=000&color=E4405F" />
+</a>
+<a href="https://www.youtube.com/">
+<img src="https://img.shields.io/badge/‹𝟹_DEVA_YOUTUBE_›-000000?style=for-the-badge&logo=youtube&logoColor=FF0000&labelColor=000&color=FF0000" />
+</a>
+
+<br><br>
+
+<img src="https://i.imgur.com/dBaSKWF.gif" height="40" width="100%">
+
+### ⚡ ABOUT ME - CODE EDITION ⚡
+
+</div>
+
+```yaml
+Name: DEVA NAYAK
+Role: Founder & Ceo Of DEVA ULTRA BOT EMPIRE
+Experience: 3+ Years in Bot Development
+Location: BHOPAL, INDIA 🇮🇳
+Language: JavaScript, Python, Node.js
+Speciality: WhatsApp Automation & High Speed Bots
+Motto: "I Don't Follow Trends, I Create Them 👑"
+Status: 👑 BOT KING - ALWAYS ON TOP
+Contact: wa.me/917489501087
+Website: github.com/devanayak-6260
+```
+
+<div align="center">
+
+<img src="https://i.imgur.com/dBaSKWF.gif" height="40" width="100%">
+
+### 🏆 GITHUB TROPHY & STATS
+
+<img src="https://github-profile-trophy.vercel.app/?username=devanayak-6260&theme=radical&no-frame=false&no-bg=false&margin-w=4&row=1&column=6" width="100%" />
+
+<img src="https://github-readme-stats.vercel.app/api?username=devanayak-6260&show_icons=true&theme=radical&hide_border=true&title_color=FFD700&icon_color=FF1493&text_color=FFFFFF&bg_color=0,000000,000000" width="48%" />
+<img src="https://streak-stats.demolab.com?user=devanayak-6260&theme=radical&hide_border=true&background=000000&stroke=FFD700&ring=FF1493&fire=FFD700&currStreakLabel=FFD700" width="48%" />
+
+### 💖 THANKS TO SUPPORTERS
+
+<a href="https://github.com/devanayak-6260/DEVA-ULTRA-SPEED-BOT/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=devanayak-6260/DEVA-ULTRA-SPEED-BOT&columns=20" />
+</a>
+
+<img src="https://komarev.com/ghpvc/?username=devanayak-6260&label=PROFILE+VIEWS&color=FFD700&style=for-the-badge&labelColor=000000" />
+<img src="https://img.shields.io/github/followers/devanayak-6260?label=FOLLOWERS&style=for-the-badge&color=FF1493&labelColor=000000" />
+
+---
+
+### <img src="https://media.giphy.com/media/LnQfpZgzgBs1W2as6M/giphy.gif" width="30"> POWERED BY DEVA EMPIRE
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:FFD700,100:FF1493&height=120&section=footer&text=MADE%20WITH%20👑%20BY%20DEVA%20NAYAK&fontSize=25&fontColor=FFFFFF&animation=fadeIn" width="100%"/>
+
+</div>
