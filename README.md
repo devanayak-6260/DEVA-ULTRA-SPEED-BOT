@@ -1,3 +1,7 @@
+<h1 align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=35&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=80&lines=👑+DEVA+ULTRA+EMPIRE+👑;POWERED+BY+DEVA+NAYAK" />
+</h1>
+
 <p align="center">
   <img src="https://i.ibb.co/DfLv9vFV/05903ad979cf.jpg" width="100%" />
 </p>
